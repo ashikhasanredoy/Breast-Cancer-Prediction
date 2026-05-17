@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>breast cancer prediction.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="background-decorations">
+        <div class="blur-circle circle-1"></div>
+        <div class="blur-circle circle-2"></div>
+    </div>
+
+    <main class="dashboard-wrapper">
+        <header class="app-header">
+            <div class="logo-area">
+                <span class="logo-pulse"></span>
+                <h1>breast cancer prediction.</h1>
+                <button type="button" class="info-toggle-btn" onclick="toggleInfoModal()" title="Dataset Information">i</button>
+            </div>
+        </header>
+
+        <section class="quick-samples-card glass-panel">
+            <h3><span class="icon">💡</span> Quick Test Presets</h3>
+            <p>Load real preprocessed patients to immediately evaluate model prediction without manual entry:</p>
+            <div class="button-group">
+                <button type="button" class="preset-btn btn-malignant" onclick="loadSample('malignant')">
+                    <span class="dot dot-red"></span> Load Malignant Sample
+                </button>
+                <button type="button" class="preset-btn btn-benign" onclick="loadSample('benign')">
+                    <span class="dot dot-green"></span> Load Benign Sample
+                </button>
+                <button type="button" class="preset-btn btn-reset" onclick="resetForm()">
+                    Reset Form
+                </button>
+            </div>
+        </section>
+
+        <form id="predictionForm" class="diagnostic-form">
+            <div class="tab-nav glass-panel">
+                <button type="button" class="tab-btn active" onclick="switchTab('mean-section')">
+                    <span class="tab-num">01</span> Mean Features
+                </button>
+                <button type="button" class="tab-btn" onclick="switchTab('se-section')">
+                    <span class="tab-num">02</span> Standard Error (SE)
+                </button>
+                <button type="button" class="tab-btn" onclick="switchTab('worst-section')">
+                    <span class="tab-num">03</span> Worst (Extreme)
+                </button>
+            </div>
+
+            <div id="mean-section" class="form-section active glass-panel">
+                <h2>Mean Cell Nuclei Metrics</h2>
+                <p class="section-desc">Average values of characteristics captured from fine needle aspirate (FNA) images.</p>
+                <div class="grid-form">
+                    <div class="input-group">
+                        <label for="texture_mean">Texture Mean</label>
+                        <input type="number" step="any" name="texture_mean" id="texture_mean" required placeholder="e.g. 10.38">
+                        <small>Standard deviation of gray-scale values</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="area_mean">Area Mean</label>
+                        <input type="number" step="any" name="area_mean" id="area_mean" required placeholder="e.g. 1001.0">
+                        <small>Mean surface area of nuclei</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="smoothness_mean">Smoothness Mean</label>
+                        <input type="number" step="any" name="smoothness_mean" id="smoothness_mean" required placeholder="e.g. 0.1184">
+                        <small>Local variation in radius lengths</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="compactness_mean">Compactness Mean</label>
+                        <input type="number" step="any" name="compactness_mean" id="compactness_mean" required placeholder="e.g. 0.2776">
+                        <small>perimeter^2 / area - 1.0</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="concavity_mean">Concavity Mean</label>
+                        <input type="number" step="any" name="concavity_mean" id="concavity_mean" required placeholder="e.g. 0.3001">
+                        <small>Severity of concave portions of contour</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="concave_points_mean">Concave Points Mean</label>
+                        <input type="number" step="any" name="concave points_mean" id="concave_points_mean" required placeholder="e.g. 0.1471">
+                        <small>Number of concave portions of contour</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="symmetry_mean">Symmetry Mean</label>
+                        <input type="number" step="any" name="symmetry_mean" id="symmetry_mean" required placeholder="e.g. 0.2419">
+                        <small>Nuclei symmetry score</small>
+                    </div>
+                    <div class="input-group">
+                        <label for="fractal_dimension_mean">Fractal Dimension Mean</label>
+                        <input type="number" step="any" name="fractal_dimension_mean" id="fractal_dimension_mean" required placeholder="e.g. 0.07871">
+                        <small>"Coastline approximation" - 1</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="se-section" class="form-section glass-panel">
+                <h2>Standard Error Nuclei Metrics</h2>
+                <p class="section-desc">Standard error estimates of each feature to describe measurement variance.</p>
+                <div class="grid-form">
+                    <div class="input-group">
+                        <label for="texture_se">Texture SE</label>
+                        <input type="number" step="any" name="texture_se" id="texture_se" required placeholder="e.g. 0.9053">
+                    </div>
+                    <div class="input-group">
+                        <label for="perimeter_se">Perimeter SE</label>
+                        <input type="number" step="any" name="perimeter_se" id="perimeter_se" required placeholder="e.g. 5.9835">
+                    </div>
+                    <div class="input-group">
+                        <label for="area_se">Area SE</label>
+                        <input type="number" step="any" name="area_se" id="area_se" required placeholder="e.g. 86.20">
+                    </div>
+                    <div class="input-group">
+                        <label for="smoothness_se">Smoothness SE</label>
+                        <input type="number" step="any" name="smoothness_se" id="smoothness_se" required placeholder="e.g. 0.0064">
+                    </div>
+                    <div class="input-group">
+                        <label for="compactness_se">Compactness SE</label>
+                        <input type="number" step="any" name="compactness_se" id="compactness_se" required placeholder="e.g. 0.0490">
+                    </div>
+                    <div class="input-group">
+                        <label for="concavity_se">Concavity SE</label>
+                        <input type="number" step="any" name="concavity_se" id="concavity_se" required placeholder="e.g. 0.0537">
+                    </div>
+                    <div class="input-group">
+                        <label for="concave_points_se">Concave Points SE</label>
+                        <input type="number" step="any" name="concave points_se" id="concave_points_se" required placeholder="e.g. 0.01587">
+                    </div>
+                    <div class="input-group">
+                        <label for="symmetry_se">Symmetry SE</label>
+                        <input type="number" step="any" name="symmetry_se" id="symmetry_se" required placeholder="e.g. 0.0300">
+                    </div>
+                    <div class="input-group">
+                        <label for="fractal_dimension_se">Fractal Dimension SE</label>
+                        <input type="number" step="any" name="fractal_dimension_se" id="fractal_dimension_se" required placeholder="e.g. 0.0062">
+                    </div>
+                </div>
+            </div>
+
+            <div id="worst-section" class="form-section glass-panel">
+                <h2>Worst (Extreme) Nuclei Metrics</h2>
+                <p class="section-desc">The "worst" or largest values (mean of the three largest values) of the cell nuclei features.</p>
+                <div class="grid-form">
+                    <div class="input-group">
+                        <label for="texture_worst">Texture Worst</label>
+                        <input type="number" step="any" name="texture_worst" id="texture_worst" required placeholder="e.g. 17.33">
+                    </div>
+                    <div class="input-group">
+                        <label for="perimeter_worst">Perimeter Worst</label>
+                        <input type="number" step="any" name="perimeter_worst" id="perimeter_worst" required placeholder="e.g. 184.6">
+                    </div>
+                    <div class="input-group">
+                        <label for="area_worst">Area Worst</label>
+                        <input type="number" step="any" name="area_worst" id="area_worst" required placeholder="e.g. 1937.05">
+                    </div>
+                    <div class="input-group">
+                        <label for="smoothness_worst">Smoothness Worst</label>
+                        <input type="number" step="any" name="smoothness_worst" id="smoothness_worst" required placeholder="e.g. 0.1622">
+                    </div>
+                    <div class="input-group">
+                        <label for="compactness_worst">Compactness Worst</label>
+                        <input type="number" step="any" name="compactness_worst" id="compactness_worst" required placeholder="e.g. 0.6656">
+                    </div>
+                    <div class="input-group">
+                        <label for="concavity_worst">Concavity Worst</label>
+                        <input type="number" step="any" name="concavity_worst" id="concavity_worst" required placeholder="e.g. 0.7119">
+                    </div>
+                    <div class="input-group">
+                        <label for="concave_points_worst">Concave Points Worst</label>
+                        <input type="number" step="any" name="concave points_worst" id="concave_points_worst" required placeholder="e.g. 0.2654">
+                    </div>
+                    <div class="input-group">
+                        <label for="symmetry_worst">Symmetry Worst</label>
+                        <input type="number" step="any" name="symmetry_worst" id="symmetry_worst" required placeholder="e.g. 0.4601">
+                    </div>
+                    <div class="input-group">
+                        <label for="fractal_dimension_worst">Fractal Dimension Worst</label>
+                        <input type="number" step="any" name="fractal_dimension_worst" id="fractal_dimension_worst" required placeholder="e.g. 0.1189">
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-area">
+                <button type="submit" class="submit-btn">
+                    <span>⚡ Run Advanced Diagnostic Analysis</span>
+                </button>
+            </div>
+        </form>
+
+        <section id="resultsSection" class="results-card glass-panel hidden">
+            <div class="results-header">
+                <h2>Diagnostic Evaluation Result</h2>
+                <p id="modelInfo" class="model-info">Powered by OncoPredict SVM</p>
+            </div>
+            
+            <div class="results-content">
+                <div class="risk-indicator">
+                    <div class="radial-ring">
+                        <span id="riskLabel">Analyzing...</span>
+                    </div>
+                </div>
+                <div class="result-details">
+                    <h3 id="diagnosisTitle">Benign Nuclei</h3>
+                    <p id="diagnosisDesc">The model predicts that the cellular features are characteristic of benign tissue. No malignant indicators were detected.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="infoModal" class="modal-overlay hidden" onclick="closeInfoModal(event)">
+        <div class="modal-content glass-panel" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>📊 Dataset Information</h2>
+                <button type="button" class="modal-close-btn" onclick="toggleInfoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="info-table">
+                    <tr>
+                        <th>Source</th>
+                        <td>Breast Cancer Wisconsin (Diagnostic) Dataset</td>
+                    </tr>
+                    <tr>
+                        <th>Total Instances</th>
+                        <td>569 samples</td>
+                    </tr>
+                    <tr>
+                        <th>Distribution</th>
+                        <td>357 Benign (62.7%), 212 Malignant (37.3%)</td>
+                    </tr>
+                    <tr>
+                        <th>Input Features</th>
+                        <td>26 morphological attributes of cell nuclei</td>
+                    </tr>
+                    <tr>
+                        <th>Target Column</th>
+                        <td><code>diagnosis</code> (1 = Malignant, 0 = Benign)</td>
+                    </tr>
+                    <tr>
+                        <th>Classifier Model</th>
+                        <td>Support Vector Classifier (SVC)</td>
+                    </tr>
+                    <tr>
+                        <th>Test Accuracy</th>
+                        <td><strong>99.12%</strong></td>
+                    </tr>
+                </table>
+                <p class="modal-footer-note">Optimized and split using stratified train-test distribution for reliable medical inference.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const samples = {
+            malignant: {
+                texture_mean: 10.38,
+                area_mean: 1001.0,
+                smoothness_mean: 0.1184,
+                compactness_mean: 0.2776,
+                concavity_mean: 0.3001,
+                "concave points_mean": 0.1471,
+                symmetry_mean: 0.2419,
+                fractal_dimension_mean: 0.07871,
+                texture_se: 0.9053,
+                perimeter_se: 5.9835,
+                area_se: 86.20,
+                smoothness_se: 0.006399,
+                compactness_se: 0.04904,
+                concavity_se: 0.05373,
+                "concave points_se": 0.01587,
+                symmetry_se: 0.03003,
+                fractal_dimension_se: 0.006193,
+                texture_worst: 17.33,
+                perimeter_worst: 184.6,
+                area_worst: 1937.05,
+                smoothness_worst: 0.1622,
+                compactness_worst: 0.6656,
+                concavity_worst: 0.7119,
+                "concave points_worst": 0.2654,
+                symmetry_worst: 0.4601,
+                fractal_dimension_worst: 0.1189
+            },
+            benign: {
+                texture_mean: 14.36,
+                area_mean: 566.3,
+                smoothness_mean: 0.09779,
+                compactness_mean: 0.08129,
+                concavity_mean: 0.06664,
+                "concave points_mean": 0.04781,
+                symmetry_mean: 0.1885,
+                fractal_dimension_mean: 0.05766,
+                texture_se: 0.7886,
+                perimeter_se: 2.058,
+                area_se: 23.56,
+                smoothness_se: 0.008462,
+                compactness_se: 0.0146,
+                concavity_se: 0.02387,
+                "concave points_se": 0.01315,
+                symmetry_se: 0.0198,
+                fractal_dimension_se: 0.0023,
+                texture_worst: 19.26,
+                perimeter_worst: 99.7,
+                area_worst: 711.2,
+                smoothness_worst: 0.144,
+                compactness_worst: 0.1773,
+                concavity_worst: 0.239,
+                "concave points_worst": 0.1288,
+                symmetry_worst: 0.2977,
+                fractal_dimension_worst: 0.07259
+            }
+        };
+
+        function loadSample(type) {
+            const data = samples[type];
+            for (const key in data) {
+                const element = document.getElementById(key) || document.getElementsByName(key)[0];
+                if (element) {
+                    element.value = data[key];
+                }
+            }
+            const container = document.querySelector('.quick-samples-card');
+            container.classList.add('pulse-active');
+            setTimeout(() => container.classList.remove('pulse-active'), 500);
+        }
+
+        function resetForm() {
+            document.getElementById('predictionForm').reset();
+            document.getElementById('resultsSection').classList.add('hidden');
+        }
+
+        function switchTab(sectionId) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+            
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            if (sectionId === 'mean-section') tabButtons[0].classList.add('active');
+            else if (sectionId === 'se-section') tabButtons[1].classList.add('active');
+            else if (sectionId === 'worst-section') tabButtons[2].classList.add('active');
+        }
+
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const dataObject = {};
+            formData.forEach((value, key) => {
+                dataObject[key] = parseFloat(value);
+            });
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataObject),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsSection = document.getElementById('resultsSection');
+                const riskLabel = document.getElementById('riskLabel');
+                const diagnosisTitle = document.getElementById('diagnosisTitle');
+                const diagnosisDesc = document.getElementById('diagnosisDesc');
+                
+                resultsSection.classList.remove('hidden');
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+                if (data.prediction === 1) {
+                    resultsSection.className = 'results-card glass-panel malignant-alert';
+                    riskLabel.textContent = 'HIGH RISK';
+                    diagnosisTitle.textContent = 'Malignant Cellular Features';
+                    diagnosisDesc.textContent = 'Warning: The mathematical evaluation indicates high structural similarity with malignant tumors. Please cross-reference with biopsy findings immediately.';
+                } else {
+                    resultsSection.className = 'results-card glass-panel benign-alert';
+                    riskLabel.textContent = 'LOW RISK';
+                    diagnosisTitle.textContent = 'Benign Cellular Features';
+                    diagnosisDesc.textContent = 'Comforting: The AI model evaluated the cell nucleus morphology and determined a highly probable benign outcome. Features align with typical non-cancerous specimens.';
+                }
+            })
+            .catch(error => {
+                console.error('Error during prediction request:', error);
+                alert('Prediction failed. Ensure Flask server is running.');
+            });
+        });
+
+        function toggleInfoModal() {
+            const modal = document.getElementById('infoModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function closeInfoModal(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

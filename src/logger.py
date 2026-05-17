@@ -1,0 +1,19 @@
+import logging
+import os
+from datetime import datetime
+
+
+log_file = f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
+log_folder = os.path.join(os.getcwd(), "logs")
+os.makedirs(log_folder, exist_ok=True) 
+
+
+log_path = os.path.join(log_folder, log_file)
+
+logging.basicConfig(
+    filename=log_path,
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+logging.info("Logging initialized successfully.")
