@@ -24,21 +24,7 @@
             </div>
         </header>
 
-        <section class="quick-samples-card glass-panel">
-            <h3><span class="icon">💡</span> Quick Test Presets</h3>
-            <p>Load real preprocessed patients to immediately evaluate model prediction without manual entry:</p>
-            <div class="button-group">
-                <button type="button" class="preset-btn btn-malignant" onclick="loadSample('malignant')">
-                    <span class="dot dot-red"></span> Load Malignant Sample
-                </button>
-                <button type="button" class="preset-btn btn-benign" onclick="loadSample('benign')">
-                    <span class="dot dot-green"></span> Load Benign Sample
-                </button>
-                <button type="button" class="preset-btn btn-reset" onclick="resetForm()">
-                    Reset Form
-                </button>
-            </div>
-        </section>
+
 
         <form id="predictionForm" class="diagnostic-form">
             <div class="tab-nav glass-panel">
@@ -190,6 +176,9 @@
                 <button type="submit" class="submit-btn">
                     <span>⚡ Run Advanced Diagnostic Analysis</span>
                 </button>
+                <button type="button" class="preset-btn btn-reset" onclick="resetForm()">
+                    Reset Form
+                </button>
             </div>
         </form>
 
@@ -256,77 +245,6 @@
     </div>
 
     <script>
-        const samples = {
-            malignant: {
-                texture_mean: 10.38,
-                area_mean: 1001.0,
-                smoothness_mean: 0.1184,
-                compactness_mean: 0.2776,
-                concavity_mean: 0.3001,
-                "concave points_mean": 0.1471,
-                symmetry_mean: 0.2419,
-                fractal_dimension_mean: 0.07871,
-                texture_se: 0.9053,
-                perimeter_se: 5.9835,
-                area_se: 86.20,
-                smoothness_se: 0.006399,
-                compactness_se: 0.04904,
-                concavity_se: 0.05373,
-                "concave points_se": 0.01587,
-                symmetry_se: 0.03003,
-                fractal_dimension_se: 0.006193,
-                texture_worst: 17.33,
-                perimeter_worst: 184.6,
-                area_worst: 1937.05,
-                smoothness_worst: 0.1622,
-                compactness_worst: 0.6656,
-                concavity_worst: 0.7119,
-                "concave points_worst": 0.2654,
-                symmetry_worst: 0.4601,
-                fractal_dimension_worst: 0.1189
-            },
-            benign: {
-                texture_mean: 14.36,
-                area_mean: 566.3,
-                smoothness_mean: 0.09779,
-                compactness_mean: 0.08129,
-                concavity_mean: 0.06664,
-                "concave points_mean": 0.04781,
-                symmetry_mean: 0.1885,
-                fractal_dimension_mean: 0.05766,
-                texture_se: 0.7886,
-                perimeter_se: 2.058,
-                area_se: 23.56,
-                smoothness_se: 0.008462,
-                compactness_se: 0.0146,
-                concavity_se: 0.02387,
-                "concave points_se": 0.01315,
-                symmetry_se: 0.0198,
-                fractal_dimension_se: 0.0023,
-                texture_worst: 19.26,
-                perimeter_worst: 99.7,
-                area_worst: 711.2,
-                smoothness_worst: 0.144,
-                compactness_worst: 0.1773,
-                concavity_worst: 0.239,
-                "concave points_worst": 0.1288,
-                symmetry_worst: 0.2977,
-                fractal_dimension_worst: 0.07259
-            }
-        };
-
-        function loadSample(type) {
-            const data = samples[type];
-            for (const key in data) {
-                const element = document.getElementById(key) || document.getElementsByName(key)[0];
-                if (element) {
-                    element.value = data[key];
-                }
-            }
-            const container = document.querySelector('.quick-samples-card');
-            container.classList.add('pulse-active');
-            setTimeout(() => container.classList.remove('pulse-active'), 500);
-        }
 
         function resetForm() {
             document.getElementById('predictionForm').reset();
