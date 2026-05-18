@@ -367,6 +367,38 @@ body {
     transform: translateY(1px);
 }
 
+.form-header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.form-header-actions .reset-btn {
+    background: #ffffff;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-family: var(--font-header);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: var(--transition-standard);
+}
+
+.form-header-actions .reset-btn:hover {
+    background: #f8fafc;
+    border-color: var(--text-secondary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.form-header-actions .reset-btn:active {
+    transform: translateY(1px);
+}
+
 
 .results-card {
     text-align: center;
@@ -515,12 +547,8 @@ body {
         font-size: 2.2rem;
     }
     
-    .preset-btn {
-        width: 100%;
-    }
-    
-    .btn-reset {
-        margin-left: 0;
+    .form-header-actions {
+        justify-content: center;
     }
 }
 

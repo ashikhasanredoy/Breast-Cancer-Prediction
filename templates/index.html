@@ -26,6 +26,12 @@
 
 
 
+        <div class="form-header-actions">
+            <button type="button" class="reset-btn" onclick="resetForm()">
+                Reset Form
+            </button>
+        </div>
+
         <form id="predictionForm" class="diagnostic-form">
             <div class="tab-nav glass-panel">
                 <button type="button" class="tab-btn active" onclick="switchTab('mean-section')">
@@ -175,9 +181,6 @@
             <div class="submit-area">
                 <button type="submit" class="submit-btn">
                     <span>⚡ Run Advanced Diagnostic Analysis</span>
-                </button>
-                <button type="button" class="preset-btn btn-reset" onclick="resetForm()">
-                    Reset Form
                 </button>
             </div>
         </form>
